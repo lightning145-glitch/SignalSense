@@ -3,14 +3,14 @@
 {% block content %}
 <h2>Available Opportunities</h2>
 
-{% if Opportunities %}
+{% if opportunities %}
 <ul class="list-group">
     {% for opp in opportunities %}
     <li class="list-group-item">
-        <h5>{{ opp.description }}</h5>
-        <p><strong>Organization:</strong>{{ opp.org_name }}</p>
-        <p><strong>Location</strong>{{ opp.location }}</p>
-        <p><strong>Skills Required:</strong>{{ opp.skills_required }}</p>
+        <h5>{{ opp['description'] }}</h5>
+        <p><strong>Organization:</strong> {{ opp['org_name'] }}</p>
+        <p><strong>Location:</strong> {{ opp['location_text'] }}</p>
+        <p><strong>Skills Required:</strong> {{ opp['skills_required'] }}</p>
     </li>
     {% endfor %}
 </ul>
