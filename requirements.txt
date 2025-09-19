@@ -1,0 +1,8 @@
+Flask
+pandas
+scikit-learn
+numpy
+geopy
+Flask-Mail
+python-dotenv
+gunicorn

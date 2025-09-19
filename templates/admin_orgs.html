@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Pending Orgs{% endblock %}
+{% block content %}
+<h2>Pending Organization</h2>
+<ul>
+    {% for org in orgs %}
+    <li>
+        <strong>{{ org['name'] }}</strong> - {{ org['email'] }}
+        <a class="btn btn-success btn-sm" href="{{ url_for('verify_org', org_id=org['id']) }}">Verify</a>
+    </li>
+    {% endor %}
+</ul>
+{% endblock %}

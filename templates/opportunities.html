@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Opportunities{% endblock %}
+{% block content %}
+<h2>Available Opportunities</h2>
+
+{% if Opportunities %}
+<ul class="list-group">
+    {% for opp in opportunities %}
+    <li class="list-group-item">
+        <h5>{{ opp.description }}</h5>
+        <p><strong>Organization:</strong>{{ opp.org_name }}</p>
+        <p><strong>Location</strong>{{ opp.location }}</p>
+        <p><strong>Skills Required:</strong>{{ opp.skills_required }}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No opportunities posted yet.</p>
+{% endif %}
+{% endblock %}

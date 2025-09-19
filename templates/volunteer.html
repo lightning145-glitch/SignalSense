@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Volunteer{% endblock %}
+{% block content %}
+<h2>Volunteer Registration</h2>
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-control">Email</label>
+        <input name="email" type="email" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-control">Skills (comma separated)</label>
+        <input name="skills" class="form-control" placeholder="teaching, counseling">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Availability</label>
+        <input name="availability" class="form-control" placeholder="Weekends">
+    </div>
+    <button class="btn btn-primary">Register</button>
+</form>
+{% endblock %}
