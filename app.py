@@ -91,30 +91,59 @@ def org_post():
 
 @app.route("/apply", methods=["POST"])
 def apply():
+    # Get volunteer and opportunity IDs from form
     volunteer_id = request.form.get("volunteer_id")
     opp_id = request.form.get("opportunity_id")
 
+    # Connect to database
     conn = get_db_conn()
-    conn.execute("INSERT INTO applications (volunteer_id, opportunity_id) VALUES (?, ?)", 
-                 (volunteer_id, opp_id))
-    
+
+    # Insert application record
+    conn.execute(
+        "INSERT INTO applications (volunteer_id, opportunity_id) VALUES (?, ?)",
+        (volunteer_id, opp_id)
+    )
+    conn.commit()
+
+    # Fetch volunteer, opportunity, and organization details
     volunteer = conn.execute("SELECT * FROM volunteers WHERE id=?", (volunteer_id,)).fetchone()
     opp = conn.execute("SELECT * FROM opportunities WHERE id=?", (opp_id,)).fetchone()
     org = conn.execute("SELECT * FROM organisations WHERE id=?", (opp["org_id"],)).fetchone()
-    
-    conn.commit()
     conn.close()
 
-    if org and volunteer:
-        msg = Message(
-            "New Volunteer Application",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[org["email"]]
-        )
-        msg.body = f"{volunteer['name']} ({volunteer['email']}) applied for {opp['title']}."
-        mail.send(msg)
+    # Send email notification if organization exists and has email
+    if org and volunteer and org.get("email"):
+        try:
+            msg = Message(
+                subject=f"New Volunteer Application: {opp['title']}",
+                sender=app.config['MAIL_USERNAME'],
+                recipients=[org["email"]]
+            )
 
-    flash("Applied - organization will be notified.")
+            # Customize email body
+            msg.body = f"""
+Hello {org['name']},
+
+A new volunteer has applied for your opportunity: {opp['title']}.
+
+Volunteer Details:
+Name: {volunteer['name']}
+Email: {volunteer['email']}
+Skills: {volunteer.get('skills', 'Not provided')}
+Availability: {volunteer.get('availability', 'Not provided')}
+
+Please contact them if needed.
+
+Thank you,
+SignalSense Team
+"""
+            mail.send(msg)
+        except Exception as e:
+            # Log error if email fails but continue
+            print("Email failed to send:", e)
+
+    # Show flash message to volunteer
+    flash("Applied successfully! The organization will be notified.")
     return redirect(url_for("home"))
 
 @app.route("/admin/orgs")
